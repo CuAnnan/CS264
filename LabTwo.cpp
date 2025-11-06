@@ -64,7 +64,9 @@ bool length_test_case_6()
 /**
  * I am assuming for the point of this question that we're not supposed to just
  * while ((*src++ = *from++)!='\0') which works.
- * I don't know how to implement the size comparison problem.
+ * Having spoken with Hao about this in lecture, we can disregard the NULL requirement
+ * and just assume that there is sufficient space because "size" is not a meaningful keyword
+ * in terms of a pointer, it will always just be the size of the type.
  */
 char* copy(char* src, const char* test)
 {
@@ -74,7 +76,7 @@ char* copy(char* src, const char* test)
     {
         src[i] = test[i];
     }
-    // making sure to add a 
+    // making sure to add a terminator to the end
     src[len2] = '\0';
     return src;
 }
@@ -218,6 +220,7 @@ bool substring_test_case_3()
 {
     char* subStr = substring(5, 3, "this is a string");
     bool match = subStr == nullptr;
+    delete[] subStr;
     return match;
 }
 
@@ -225,6 +228,7 @@ bool substring_test_case_4()
 {
     char* sub = substring(-4, 2, "this is a string");
     bool match = sub == nullptr;
+    delete[] sub;
     return match;
 }
 
@@ -232,6 +236,7 @@ bool substring_test_case_5()
 {
     char* subStr = substring(5, 53, "this is a string");
     bool match = subStr == nullptr;
+    delete[] subStr;
     return match;
 }
 

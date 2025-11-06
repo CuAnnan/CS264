@@ -18,6 +18,8 @@ class SpreadSheetCell
         void setValue(double inValue);
         double getValue();
         void setString(std::string inString);
+        const SpreadSheetCell add(const SpreadSheetCell &cell) const;
+        const SpreadSheetCell operator+(const SpreadSheetCell &cell) const;
         std::string getString();
     protected:
         double value_;

@@ -55,6 +55,15 @@ void SpreadSheetCell::setValue(double inValue)
     (*this).value_ = inValue; // this is equivalent to the above assignment
 }
 
+const SpreadSheetCell SpreadSheetCell::add(const SpreadSheetCell &cell) const
+{
+    // const SpreadSheetCell newCell;
+    // newCell.setValue(cell.getValue());
+    // return newCell;
+    // check notes.
+    return nullptr;
+}
+
 
 double SpreadSheetCell::getValue()
 {
