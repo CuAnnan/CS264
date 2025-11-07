@@ -5,8 +5,14 @@
 using namespace std;
 
 
-// helper function for printing
-unsigned int getMagnitudeCardinality(unsigned int n)
+
+/**
+ * A helper function to get the order of magnitude of a number
+ * All other Documentation Style comments are found in the .h file, that appears to be the best practice for C++
+ * I've only internally commented methods if I think I'm doing anything that requires it.
+ * Or in the one case I needed to know a better way of doing things.
+ */
+unsigned int getOrderOfMagnitude(unsigned int n)
 {
     int l10 = 1;
     while(n/10 >= 1)
@@ -17,20 +23,12 @@ unsigned int getMagnitudeCardinality(unsigned int n)
     return l10;
 }
 
-/**
- * Constructor for the m and n only properties.
- * @param m this is the number of rows
- * @param n this is the number of cols
- */
+
+
 Matrix::Matrix(unsigned int m, unsigned int n)
 {
-    // initialise rows
     this->_rows = m;
-    // initialise cols
     this->_cols = n;
-    // initialise cells and all rows in cells
-    // cells will be a pointer representing 
-    // an m-length array of n-length arrays
     this->_cells = new int*[m];
     for(int i = 0; i < m; i++)
     {
@@ -38,14 +36,6 @@ Matrix::Matrix(unsigned int m, unsigned int n)
     }
 }
 
-/**
- * Constructor for cells, m, and n
- * @param cells The cells to treat as being the contents of the matrix
- *              These cells are deep copied. This has to be the case or we can't
- *              safely delete, and this class can't be assured of enclosure. 
- * @param m     The number of rows in the array
- * @param n     The number of cols in the array
- */
 Matrix::Matrix(int** cells, unsigned int m, unsigned int n)
 {
     this->_rows = m;
@@ -61,11 +51,7 @@ Matrix::Matrix(int** cells, unsigned int m, unsigned int n)
     }
 }
 
-/**
- * Copy Constructor, basically exactly maps to the array copy.
- * I considered using a paramaterised constructor in the header file but that would have lead to a coupling of pointers, which would violate
- * my design choice
- */
+
 Matrix::Matrix(const Matrix &otherMatrix)
 {
     this->_rows = otherMatrix._rows;
@@ -83,10 +69,6 @@ Matrix::Matrix(const Matrix &otherMatrix)
 }
 
 
-/**
- * Destructor for the matrix
- * Which is required to handle the design decision that "a Matrix created from another Matrix should still work if the first is deleted"
- */
 Matrix::~Matrix()
 {
     for(int i = 0; i < this->_rows; i++)
@@ -97,34 +79,24 @@ Matrix::~Matrix()
     this->_cells = NULL;
 }
 
-/**
- * Getter for the count of rows
- * @return The count of rows
- */
+
 unsigned int Matrix::rows() const
 {
     return this->_rows;
 }
 
-/**
- * Getter for the count of cols
- * @return the count of the cells
- */
 unsigned int Matrix::columns() const
 {
     return this->_cols;
 }
 
-/**
- * Printer for the matrix.
- * @return Returns a string representation of this Matrix.
- */
 string Matrix::toStr() const
 {
-    string out = "[\n";
+    string out = "";
     for(int i = 0; i < this->_rows; i++)
     {
-        out += "\t[";
+        // this just adds a nice ascii symbol than | to left hand side
+        out += (char)179;
         for(int j = 0; j < this->_cols; j++)
         {
             int cell = this->_cells[i][j];
@@ -132,37 +104,30 @@ string Matrix::toStr() const
             // I found this code, more or less, here.
             // https://www.oreilly.com/library/view/c-cookbook/0596007612/ch04s02.html
             // it's the only "not from first principles" code I've used so far
-            // but I have tailored it to work for my specific use case
+            // but I have tailored it to work for my specific use case by tracking a value
+            // _largestMagnitudeCardinality and padding to that
             cellStr.insert(
                 cellStr.begin(),
-                this->_largestMagnitudeCardinality - cellStr.length() + 1,
+                this->_orderOfMagnitude - cellStr.length() + 1,
                 ' '
             );
-
+            // this just adds a nice ascii symbol than | to right hand side
             out += cellStr + (j < this->_cols - 1?", ":"");
         }
-        out += "]";
+        out += (char)179;
         if(i < this->_rows - 1)
         {
-            out += ",";
+            out += "\n";
         }
-        out += "\n";
     }
-    return out+"]";
+    return out;
 }
 
-/**
- * Method to get a value by its positional indices
- */
 int Matrix::get(unsigned int i, unsigned int j) const
 {
     return this->_cells[i][j];
 }
 
-/**
- * Method to set the value at a given positional index pair. This is the only way to manipulate the values of the Matrix by design.
- * The cells field is private. Manipulating it directly is not advised.
- */
 void Matrix::set(unsigned int i, unsigned int j, int value)
 {
     if(i >= this->_rows)
@@ -179,30 +144,23 @@ void Matrix::set(unsigned int i, unsigned int j, int value)
     {
         this->_largestMagnitude = magnitude;
         // we only worry about updating the cardinality if the new value is bigger than the old value
-        this->_largestMagnitudeCardinality = getMagnitudeCardinality(magnitude);
+        this->_orderOfMagnitude = getOrderOfMagnitude(magnitude);
         
     }
     
     this->_cells[i][j] = value;
 }
 
-/**
- * Equality comparison operator. First checks for size as a hotwire, then checks each cell for equality.
- * If they're not the same at any point it returns false.
- */
 bool Matrix::operator==(const Matrix &otherMatrix) const
 {
-    if(this->_rows != otherMatrix._rows)
-    {
-        return false;
-    }
-    if(this->_cols != otherMatrix._cols)
+    // AIUI it doesn't matter whether !(a && b) "is more effiecent" than !a || !b because
+    // the compiler does hot swapping.
+    if(this->_rows != otherMatrix._rows || this->_cols != otherMatrix._cols)
     {
         return false;
     }
 
-    
-
+    // check every int in every index.
     for(int i = 0; i < this->_rows; i++)
     {
         for(int j = 0; j < this->_cols; j++)
@@ -216,32 +174,20 @@ bool Matrix::operator==(const Matrix &otherMatrix) const
     return true;
 }
 
-/**
- * A method to create a matrix that is the sum of this matrix and thatmatrix
- * @param that The other matrix
- * @return The matrix which is the sum of the two matrices
- */
-const Matrix Matrix::operator+(const Matrix &that) const
+Matrix Matrix::operator+(const Matrix &that) const
 {
     Matrix newM(this->_rows, this->_cols);
     for(int i = 0; i < this->_rows; i++)
     {
         for(int j = 0; j < this->_cols; j++)
         {
-            // add the two values of the cells in both internal arrays
-            // and set the value of the matrix for that i, j, cell sum
             newM.set(i, j, this->_cells[i][j] + that._cells[i][j]);
         }
     }
     return newM;
 }
 
-/**
- * Method to generate the matrix that is the result of subtracting that matrix from this matrix
- * @param that Another matrix
- * @return The resulting matrix from subtracting that from this
- */
-const Matrix Matrix::operator-(const Matrix &that) const
+Matrix Matrix::operator-(const Matrix &that) const
 {
     Matrix newM(this->_rows, this->_cols);
     for(int i = 0; i < this->_rows; i++)
@@ -254,20 +200,12 @@ const Matrix Matrix::operator-(const Matrix &that) const
     return newM;
 }
 
-/**
- * Get a row from the matrix based on its i index. This is really just a helper function for the matrix multiplication method.
- * @param i The index of the row to return.
- */
-const int* Matrix::getRow(unsigned int i) const
+const int* Matrix::getRow(const unsigned int i) const
 {
     return this->_cells[i];
 }
 
-/**
- * Get a column from the matrix based on its j index.  This is really just a helper function for the matrix multiplication method.
- * @param j The index of the column to return.
- */
-const int* Matrix::getCol(unsigned int j) const
+const int* Matrix::getCol(const unsigned int j) const
 {
     int* column = new int[this->_rows];
     for(int i = 0; i < this->_rows; i++)
@@ -277,15 +215,7 @@ const int* Matrix::getCol(unsigned int j) const
     return column;
 }
 
-/**
- * Matrix multiplication operator. Like the above operators, it creates a new array by manipulating this and that.
- * This will only work if the rules for multiplication *can* be employed. It may cause exceptions or improper behaviour if they do not.
- * Since we haven't been shown how to handle exceptions this can fail silently.
- * There should be an exception if the rows and columns constraint isn't respected.
- * @param that The other array
- * @return Returns the array resulting from multiplication 
- */
-const Matrix Matrix::operator*(const Matrix &that) const
+Matrix Matrix::operator*(const Matrix &that) const
 {
     Matrix newM(this->_rows, that._cols);
 
@@ -309,11 +239,7 @@ const Matrix Matrix::operator*(const Matrix &that) const
     return newM;
 }
 
-/**
- * Transpose operator, overloads bitwise negation operator.
- * @return The tras
- */
-const Matrix Matrix::operator~() const
+Matrix Matrix::operator~() const
 {
     Matrix newM(this->_cols, this->_rows);
 
@@ -328,15 +254,7 @@ const Matrix Matrix::operator~() const
 }
 
 
-// helper functions
-// These are not required for in the spec but they make building and confirming test cases much easier
-
-/**
- * This is just a helper function to randomly populate a Matrix with seeded random values.
- * This allows me to predictably and reliably fill matrices easily which will help with testing.
- * @param seed  The seed for the PRNG
- */
-void Matrix::fillRandomly(int seed)
+void Matrix::fillRandomly(const int seed)
 {
     srand(seed);
 
@@ -349,10 +267,6 @@ void Matrix::fillRandomly(int seed)
     }
 }
 
-/**
- * Fills every entry in the matrix with values sequentially starting from a given number.
- * @param startingAt The number to start filling from
- */
 void Matrix::fillSequentially(int startingAt)
 {
     for(int i = 0; i < this->_rows; i++)
@@ -364,10 +278,6 @@ void Matrix::fillSequentially(int startingAt)
     }
 }
 
-/**
- * A method that returns a deep clone of the pointers
- * @return The deep clone of the cells in this Matrix
- */
 int** Matrix::getCells() const
 {
     int** cells = new int*[this->_rows];
@@ -384,5 +294,10 @@ int** Matrix::getCells() const
 
 const unsigned int Matrix::getCardinality() const
 {
-    return this->_largestMagnitudeCardinality;
+    return this->_orderOfMagnitude;
+}
+
+void Matrix::debug() const
+{
+    cout << this->toStr() << endl;
 }
