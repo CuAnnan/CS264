@@ -197,6 +197,8 @@ void Test_Case_Operator_Transpose(const Matrix &mat)
 {
     cout << "Test case for transpose operator:"<<endl;
     const Matrix matT = ~mat;
+    mat.debug();
+    matT.debug();
     bool pass = true;
     for(int i = 0; i < mat.rows(); i++)
     {
