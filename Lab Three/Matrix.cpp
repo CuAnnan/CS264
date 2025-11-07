@@ -9,8 +9,7 @@ using namespace std;
 /**
  * A helper function to get the order of magnitude of a number
  * All other Documentation Style comments are found in the .h file, that appears to be the best practice for C++
- * I've only internally commented methods if I think I'm doing anything that requires it.
- * Or in the one case I needed to know a better way of doing things.
+ * I've only internally commented methods if I think I'm doing anything that requires it (like commenting that I used three lines of code from an O'Reilly page)
  */
 unsigned int getOrderOfMagnitude(unsigned int n)
 {

@@ -264,9 +264,7 @@ int main()
 
     Test_Case_Operator_Equals(*m1, *m2, true);
     Test_Case_Operator_Equals(*m1, *m3, false);
-    // done with m3 so delete it
-    delete m3;
-
+    
     Test_Case_Operator_Transpose(*m1);
 
     
@@ -278,7 +276,8 @@ int main()
     delete[] cells;
 
     delete m5;
-    delete m2;
     delete m4;
+    delete m2;
+    delete m3;
     delete m1;
 }
