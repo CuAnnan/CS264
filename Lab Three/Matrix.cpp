@@ -95,7 +95,7 @@ string Matrix::toStr() const
     for(int i = 0; i < this->_rows; i++)
     {
         // this just adds a nice ascii symbol than | to left hand side
-        out += (char)179;
+        out += "|";
         for(int j = 0; j < this->_cols; j++)
         {
             int cell = this->_cells[i][j];
@@ -113,7 +113,7 @@ string Matrix::toStr() const
             // this just adds a nice ascii symbol than | to right hand side
             out += cellStr + (j < this->_cols - 1?", ":"");
         }
-        out += (char)179;
+        out += "|";
         if(i < this->_rows - 1)
         {
             out += "\n";
