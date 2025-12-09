@@ -199,6 +199,8 @@ void Test_Case_Operator_Transpose(const Matrix &mat)
     const Matrix matT = ~mat;
     mat.debug();
     matT.debug();
+    const Matrix matTT = ~matT;
+
     bool pass = true;
     for(int i = 0; i < mat.rows(); i++)
     {
@@ -217,6 +219,10 @@ void Test_Case_Operator_Transpose(const Matrix &mat)
         cout << mat.toStr() << endl;
         cout << matT.toStr() << endl;
         cout <<endl;
+    }
+    if(matTT == mat)
+    {
+        cout << "Transpose of transpose generatese original matrix"<<endl;
     }
 }
 
