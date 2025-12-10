@@ -4,6 +4,9 @@
 
 using namespace std;
 
+/**
+ * Similar to the Module, the constructors are sufficiently simple as to be defined in the header file.
+ */
 
 /**
  * Setter for description

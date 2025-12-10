@@ -6,7 +6,7 @@ using namespace std;
 
 
 /**
- * Implementation of missing methods for Module.
+ * Implementation of methods for Module.
  * Both the default and copy constructors are defined in the header file because they instantiate only instantiate primitive values
  * Yes. I know that strings aren't technically primitives. But they're essentially primitives for the purposes of deconstrcutors.
  */
