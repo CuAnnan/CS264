@@ -72,17 +72,18 @@ void Module::setCredits(const unsigned int credits)
  * @param that The module to compare to this module for equality
  * @returns True if the modules are the same. 
  */
-const bool Module::operator==(const Module& that) const
+bool Module::operator==(Module* that)
 {
-    return (this->_name.compare(that._name) == 0) && this->_credits == that._credits;
+    return (this->_name.compare(that->_name) == 0) && this->_credits == that->_credits;
 }
+
 
 /**
  * toString helper function
  * @param padding the number of tabs to prefix the string with.
  * @return The object's string representation
  */
-const string Module::toString(const unsigned int padding) const
+const string Module::toStr(const unsigned int padding) const
 {
     string out = "";
     for(int i = 0; i < padding; i++)

@@ -43,7 +43,7 @@ class Placement:public Module
         /**
          * toString method
          */
-        const string toString(unsigned int padding=0) const;
+        const string toStr(unsigned int padding=0) const;
 
 
     private:

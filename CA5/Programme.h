@@ -2,7 +2,7 @@
 #define PROGRAMMEHEADER_H
 
 #include <string>
-#include "Module.h";
+#include "Module.h"
 
 using namespace std;
 
@@ -54,7 +54,7 @@ class Programme
         void setYear(const unsigned int);
 
         // toString method
-        const string toStr() const;
+        const string toStr(const unsigned int padding=0) const;
 
 
     private:

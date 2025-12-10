@@ -41,7 +41,8 @@ class Module
          * We do this because we don't want to just check if it points to the same object instance, but if the values of the object instance are the same.
          * As this is a naive POJO, we can't guarantee that two copies won't be made (eg if it comes out of a database as part of multiple queries, multiple instances can be spun up)
          */
-        const bool operator==(const Module& that) const;
+        bool operator==(Module* that);
+        
 
         /**
          * getter and setter for name
@@ -64,7 +65,7 @@ class Module
         /**
          * While not, strictly, called for by the spec in the assignment; this allows for easier debugging and stringing together of multiple modules into a single toString method later
          */
-        virtual const string toString(const unsigned int padding=0) const;
+        virtual const string toStr(const unsigned int padding=0) const;
 
 
     /*

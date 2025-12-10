@@ -39,6 +39,11 @@ Programme::~Programme()
 void Programme::addModule(Module* m)
 {
     if(this->_moduleCount >= this->_maxModules) return;
+    // don't add a duplicate module
+    for(int i = 0; i < this->_moduleCount; i++)
+    {
+        if(*this->_modules[i] == m) return;
+    }
 
     this->_modules[this->_moduleCount++] = m;
 }
@@ -78,14 +83,24 @@ void Programme::setYear(const unsigned int year)
     this->_year = year;
 }
 
-const string Programme::toStr() const
+/**
+ * A method to return a formatted string representation of the object. Each module or placement is indented using its own toStr
+ * @param padding   The (optional) padding to prefix the toString with
+ * @return The string represenation of the object.
+ */
+const string Programme::toStr(const unsigned int padding) const
 {
-    string out = "[Programme: name=\""+this->_name+"\" year="+to_string(this->_year)+"";
+    string prefix = "";
+    for(int i = 0; i < padding; i++)
+    {
+        prefix += "\t";
+    }
+    string out = prefix+"[Programme: name=\""+this->_name+"\" year="+to_string(this->_year)+"";
 
     for(int i = 0; i < this->_moduleCount; i++)
     {
-        out += "\n"+(this->_modules[i])->toString(1);
+        out += "\n"+(this->_modules[i])->toStr(padding + 1);
     }
     
-    return out+"]";
+    return out+"\n"+prefix+"]";
 }
